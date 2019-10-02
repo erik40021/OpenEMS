@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="aQute.bnd.classpath.container"/>
+	<classpathentry kind="src" output="bin" path="src"/>
+	<classpathentry kind="src" output="bin_test" path="test">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="/io.openems.edge.common"/>
+	<classpathentry kind="src" path="/io.openems.edge.arduino.api"/>
+	<classpathentry kind="src" path="/io.openems.common"/>
+	<classpathentry kind="lib" path="/io.openems.wrapper/generated/io.openems.wrapper.influxdb-java.jar">
+		<attributes>
+			<attribute name="bsn" value="io.openems.wrapper.influxdb-java.jar"/>
+			<attribute name="type" value="PROJECT"/>
+			<attribute name="project" value="io.openems.wrapper"/>
+			<attribute name="version" value="latest"/>
+			<attribute name="index_location" value="platform:/plugin/bndtools.builder/org/bndtools/builder/classpath/empty.index"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="accessible" pattern="com/squareup/moshi/*"/>
+			<accessrule kind="accessible" pattern="org/influxdb/*"/>
+			<accessrule kind="accessible" pattern="org/influxdb/dto/*"/>
+			<accessrule kind="accessible" pattern="org/msgpack/value/*"/>
+			<accessrule kind="accessible" pattern="org/msgpack/value/impl/*"/>
+			<accessrule kind="accessible" pattern="org/msgpack/core/buffer/*"/>
+			<accessrule kind="accessible" pattern="org/msgpack/core/*"/>
+			<accessrule kind="accessible" pattern="okhttp3/*"/>
+			<accessrule kind="accessible" pattern="okio/*"/>
+			<accessrule kind="accessible" pattern="retrofit2/*"/>
+			<accessrule kind="accessible" pattern="retrofit2/http/*"/>
+			<accessrule kind="accessible" pattern="retrofit2/converter/moshi/*"/>
+			<accessrule kind="accessible" pattern="org/msgpack/*"/>
+			<accessrule ignoreifbetter="true" kind="discouraged" pattern="**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/de424/.m2/repository/com/fazecast/jSerialComm/2.5.1/jSerialComm-2.5.1.jar">
+		<attributes>
+			<attribute name="bsn" value="com.fazecast.jSerialComm"/>
+			<attribute name="type" value="REPO"/>
+			<attribute name="project" value="io.openems.edge.arduino.led"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="accessible" pattern="com/fazecast/jSerialComm/*"/>
+			<accessrule ignoreifbetter="true" kind="discouraged" pattern="**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

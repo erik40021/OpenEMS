@@ -1,0 +1,13 @@
+#
+# io.openemes.edge.arduino.led DEBUG LAUNCH SPECFICATION 
+#
+
+-include: ~io.openemes.edge.arduino.led.bndrun
+
+-runrequires.debug:  \
+	${debug-bundles}
+
+-runtrace: true
+
+-runbundles: \
+	${error;Resolve first}

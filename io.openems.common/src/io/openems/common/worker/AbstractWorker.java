@@ -35,6 +35,7 @@ public abstract class AbstractWorker {
 	private final AtomicBoolean isStopped = new AtomicBoolean(false);
 	private final Mutex cycleMutex = new Mutex(false);
 
+	
 	/**
 	 * Initializes the worker and starts the worker thread
 	 * 

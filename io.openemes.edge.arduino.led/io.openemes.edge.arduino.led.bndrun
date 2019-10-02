@@ -1,0 +1,14 @@
+#
+# io.openemes.edge.arduino.led LAUNCH SPECIFICATION
+#
+
+
+Bundle-Version:				1.0.0.${tstamp}
+Bundle-SymbolicName:		io.openemes.edge.arduino.led.launch
+JPM-Command:				provider
+
+
+-runrequires:  \
+	osgi.identity;filter:='(osgi.identity=io.openemes.edge.arduino.led.provider)'
+
+-runbundles: ${error;You must first resolve this bndrun file before you can run it}
