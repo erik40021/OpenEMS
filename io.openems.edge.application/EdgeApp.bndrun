@@ -20,6 +20,7 @@
 	bnd.identity;id='io.openems.common',\
 	bnd.identity;id='io.openems.edge.application',\
 	bnd.identity;id='io.openems.edge.battery.soltaro',\
+	bnd.identity;id='io.openems.edge.bridge.mbus',\
 	bnd.identity;id='io.openems.edge.bridge.modbus',\
 	bnd.identity;id='io.openems.edge.common',\
 	bnd.identity;id='io.openems.edge.controller.api.backend',\
