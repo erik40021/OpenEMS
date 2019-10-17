@@ -212,11 +212,10 @@
 	com.google.guava;version='[28.1.0,28.1.1)',\
 	org.ops4j.pax.logging.pax-logging-api;version='[1.11.2,1.11.3)',\
 	org.ops4j.pax.logging.pax-logging-service;version='[1.11.2,1.11.3)',\
-<<<<<<< HEAD
-	com.fazecast.jSerialComm;version='[2.5.2,2.5.3)'
-	
-=======
 	com.fazecast.jSerialComm;version='[2.5.2,2.5.3)',\
 	io.openems.edge.meter.sunspec;version=snapshot,\
-	io.openems.edge.solaredge;version=snapshot
->>>>>>> refs/heads/develop
+	io.openems.edge.solaredge;version=snapshot,\
+	com.fasterxml.jackson.core.jackson-annotations;version='[2.10.0,2.10.1)',\
+	com.fasterxml.jackson.core.jackson-core;version='[2.10.0,2.10.1)',\
+	com.fasterxml.jackson.core.jackson-databind;version='[2.10.0,2.10.1)',\
+	com.github.scribejava.core;version='[6.9.0,6.9.1)'
