@@ -6,7 +6,7 @@
 
 -runproperties: \
 	org.osgi.service.http.port=8080,\
-	felix.cm.dir=c:/openems-config
+	felix.cm.dir=/home/de424/git/openems/openems-config
 
 -runee: JavaSE-1.8
 

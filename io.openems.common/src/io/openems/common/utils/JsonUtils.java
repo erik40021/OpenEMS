@@ -151,6 +151,22 @@ public class JsonUtils {
 		}
 		return result;
 	}
+	
+	/**
+	 * Converts JSON Array to a double Array.
+	 * 
+	 * @param json the JSON Array
+	 * @return a double Array
+	 * @throws OpenemsNamedException on error
+	 */
+	public static float[] getAsFloatArray(JsonArray json) throws OpenemsNamedException {
+		float[] result = new float[json.size()];
+		int i = 0;
+		for (JsonElement element : json) {
+			result[i++] = element.getAsFloat();
+		}
+		return result;
+	}
 
 	public static JsonElement getAsJsonElement(Object value) {
 		// null

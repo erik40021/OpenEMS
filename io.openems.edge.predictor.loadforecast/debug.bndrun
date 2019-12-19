@@ -1,0 +1,13 @@
+#
+# io.openems.edge.predictor.loadforecast DEBUG LAUNCH SPECFICATION 
+#
+
+-include: ~io.openems.edge.predictor.loadforecast.bndrun
+
+-runrequires.debug:  \
+	${debug-bundles}
+
+-runtrace: true
+
+-runbundles: \
+	${error;Resolve first}
