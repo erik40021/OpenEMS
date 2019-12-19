@@ -2,16 +2,13 @@ package io.openems.edge.predictor.loadforecast;
 
 import java.time.Clock;
 
-import org.osgi.service.event.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.openems.common.exceptions.OpenemsException;
 import io.openems.common.types.ChannelAddress;
 import io.openems.edge.common.component.AbstractOpenemsComponent;
 import io.openems.edge.common.component.ComponentManager;
 import io.openems.edge.common.component.OpenemsComponent;
-import io.openems.edge.common.event.EdgeEventConstants;
 import io.openems.edge.predictor.api.HourlyPredictor;
 import io.openems.edge.predictor.loadforecast.data.Payload;
 

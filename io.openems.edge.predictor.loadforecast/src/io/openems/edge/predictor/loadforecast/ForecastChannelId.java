@@ -1,7 +1,6 @@
 package io.openems.edge.predictor.loadforecast;
 
 import io.openems.common.channel.Level;
-import io.openems.common.channel.Unit;
 import io.openems.common.types.OpenemsType;
 import io.openems.edge.common.channel.Doc;
 

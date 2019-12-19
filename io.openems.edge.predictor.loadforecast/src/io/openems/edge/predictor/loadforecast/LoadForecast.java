@@ -2,7 +2,6 @@ package io.openems.edge.predictor.loadforecast;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,22 +11,15 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
-
 import io.openems.common.OpenemsConstants;
 import io.openems.common.exceptions.OpenemsError.OpenemsNamedException;
 import io.openems.common.jsonrpc.base.JsonrpcRequest;
 import io.openems.common.jsonrpc.base.JsonrpcResponseSuccess;
 import io.openems.common.session.User;
-import io.openems.common.types.OpenemsType;
-import io.openems.edge.common.channel.Channel;
 import io.openems.edge.common.component.ComponentManager;
 import io.openems.edge.common.component.OpenemsComponent;
-import io.openems.edge.common.event.EdgeEventConstants;
 import io.openems.edge.common.jsonapi.JsonApi;
 import io.openems.edge.common.sum.Sum;
-import io.openems.edge.common.type.TypeUtils;
 import io.openems.edge.predictor.api.ConsumptionHourlyPredictor;
 import io.openems.edge.predictor.api.HourlyPrediction;
 import io.openems.edge.predictor.loadforecast.data.InputDataParser;
@@ -39,10 +31,10 @@ import io.openems.edge.predictor.loadforecast.jsonrpc.LoadForecastOutputRequest;
 import org.osgi.service.metatype.annotations.Designate;
 
 @Designate(ocd = Config.class, factory = true)
-@Component(name = "Predictor.Production.Ann.Model", //
+@Component(name = "Predictor.Consumption.LoadForecast", //
 		immediate = true, //
-		configurationPolicy = ConfigurationPolicy.REQUIRE, //
-		property = EventConstants.EVENT_TOPIC + "=" + EdgeEventConstants.TOPIC_CYCLE_AFTER_PROCESS_IMAGE)
+		configurationPolicy = ConfigurationPolicy.REQUIRE) //
+		//property = EventConstants.EVENT_TOPIC + "=" + EdgeEventConstants.TOPIC_CYCLE_AFTER_PROCESS_IMAGE)
 public class LoadForecast extends AbstractLoadForecastModel
 		implements ConsumptionHourlyPredictor, JsonApi, OpenemsComponent{//, EventHandler {
 
