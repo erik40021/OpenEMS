@@ -38,8 +38,15 @@ public class InputDataParser {
 
 	public void parseForecastingInput() {
 		int start_index = 42; //TODO
+		float[] forecasting_input = new float[363];
 		float[] load_input = this.parsePastLoads(start_index);
 		float[] weather_input = this.parseFutureWeather(start_index);
+		for(int i=0; i<load_input.length; i++) {
+			forecasting_input[i] = load_input[i];
+		}
+		for(int i=0; i<weather_input.length; i++) {
+			forecasting_input[i+load_input.length] = weather_input[i];
+		}
 		// TODO rest-eintraege bestimmen und dranhaengen (meanofpastday, currenthour, currentdayinweek, etc.)
 		this.input = null; //TODO
 	}

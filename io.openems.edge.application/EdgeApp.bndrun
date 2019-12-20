@@ -198,6 +198,7 @@
 	io.openems.edge.controller.selltogridlimit;version=snapshot,\
 	com.sun.jna;version='[5.4.0,5.4.1)',\
 	io.openems.edge.pvinverter.sunspec;version=snapshot,\
+	io.openems.edge.predictor.loadforecast;version=snapshot,\
 	io.openems.edge.predictor.persistencemodel;version=snapshot,\
 	io.openems.edge.tesla.powerwall2;version=snapshot,\
 	io.openems.edge.evcs.cluster;version=snapshot,\

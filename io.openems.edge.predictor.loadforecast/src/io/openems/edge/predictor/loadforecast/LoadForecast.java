@@ -27,6 +27,7 @@ import io.openems.edge.predictor.loadforecast.data.Payload;
 import io.openems.edge.predictor.loadforecast.jsonrpc.GetLoadForecastInputRequest;
 import io.openems.edge.predictor.loadforecast.jsonrpc.GetLoadForecastInputResponse;
 import io.openems.edge.predictor.loadforecast.jsonrpc.LoadForecastOutputRequest;
+import io.openems.edge.predictor.loadforecast.jsonrpc.LoadForecastOutputResponse;
 
 import org.osgi.service.metatype.annotations.Designate;
 
@@ -71,7 +72,6 @@ public class LoadForecast extends AbstractLoadForecastModel
 
 	@Override
 	public HourlyPrediction get24hPrediction() {
-		// TODO call communication api to request forecast of a certain model, get the forecast and return it 
 		Integer[] forecast_load = null;
 		try {
 			forecast_load = this.getForecast();
@@ -79,7 +79,7 @@ public class LoadForecast extends AbstractLoadForecastModel
 			this.logError(this.log, e.toString());
 			return null;
 		}
-		LocalDateTime start = LocalDateTime.now();
+		LocalDateTime start = this.current_date_time;
 		HourlyPrediction forecast = new HourlyPrediction(forecast_load, start);
 		return forecast;
 	}

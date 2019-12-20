@@ -17,9 +17,9 @@ import io.openems.common.jsonrpc.base.JsonrpcResponseSuccess;
  *   "jsonrpc": "2.0",
  *   "id": "UUID",
  *   "result": {
- *     "table": [{
- *       TODO
- *     }]
+ *     "input": [
+ *     	  //24 load values (float)
+ *     ]
  *   }
  * }
  * </pre>

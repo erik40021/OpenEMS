@@ -1,4 +1,4 @@
-package io.openems.edge.predictor.loadforecast;
+package io.openems.edge.predictor.loadforecast.jsonrpc;
 
 import java.util.UUID;
 

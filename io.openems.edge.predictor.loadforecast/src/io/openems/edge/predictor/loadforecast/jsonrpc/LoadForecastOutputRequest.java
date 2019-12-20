@@ -2,8 +2,6 @@ package io.openems.edge.predictor.loadforecast.jsonrpc;
 
 import java.util.UUID;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.openems.common.exceptions.OpenemsError.OpenemsNamedException;
@@ -11,7 +9,7 @@ import io.openems.common.jsonrpc.base.JsonrpcRequest;
 import io.openems.common.utils.JsonUtils;
 
 /**
- * Wraps a JSON-RPC Request to send the load forecast's predicted output.
+ * Wraps a JSON-RPC Request to send the forecast load output.
  * 
  * <pre>
  * {
