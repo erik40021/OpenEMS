@@ -42,6 +42,7 @@
 	bnd.identity;id='io.openems.edge.controller.ess.onefullcycle',\
 	bnd.identity;id='io.openems.edge.controller.evcs',\
 	bnd.identity;id='io.openems.edge.controller.evcs.fixactivepower',\
+	bnd.identity;id='io.openems.edge.controller.fid.pvprog',\
 	bnd.identity;id='io.openems.edge.controller.highloadtimeslot',\
 	bnd.identity;id='io.openems.edge.controller.io.alarm',\
 	bnd.identity;id='io.openems.edge.controller.io.fixdigitaloutput',\
@@ -123,6 +124,7 @@
 	io.openems.edge.controller.ess.limitdischargecellvoltage;version=snapshot,\
 	io.openems.edge.controller.ess.onefullcycle;version=snapshot,\
 	io.openems.edge.controller.evcs;version=snapshot,\
+	io.openems.edge.controller.fid.pvprog;version=snapshot,\
 	io.openems.edge.controller.highloadtimeslot;version=snapshot,\
 	io.openems.edge.controller.io.alarm;version=snapshot,\
 	io.openems.edge.controller.io.fixdigitaloutput;version=snapshot,\

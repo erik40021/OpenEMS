@@ -4,25 +4,23 @@
 
 Bundle-Version:					1.0.0.${tstamp}
 Bundle-Description: \
-	The provider bundle for io.openems.edge.predictor.loadforecast. \
-	\
-	${warning;Please update this Bundle-Description in io.openems.edge.predictor.loadforecast/api.bnd}
+	Load Forecast Bundle
 
-Export-Package:  \
-	io.openems.edge.predictor.loadforecast.api;-provide=true
+Export-Package: \
+	io.openems.edge.predictor.loadforecast.api;-provide=true,\
+	io.openems.edge.predictor.loadforecast.data,\
+	io.openems.edge.predictor.loadforecast
 
-Private-Package: io.openems.edge.predictor.loadforecast
 
 -includeresource: {readme.md}
 
 -buildpath: \
 	osgi.enroute.base.api;version=2.1,\
-	com.google.gson
+	com.google.gson,\
+	io.openems.edge.timedata.api
 
 -testpath: \
 	osgi.enroute.junit.wrapper;version=4.12, \
 	osgi.enroute.hamcrest.wrapper;version=1.3
 
--privatepackage: \
-	io.openems.edge.predictor.loadforecast.data,\
-	io.openems.edge.predictor.loadforecast.jsonrpc
+-privatepackage: io.openems.edge.predictor.loadforecast.jsonrpc

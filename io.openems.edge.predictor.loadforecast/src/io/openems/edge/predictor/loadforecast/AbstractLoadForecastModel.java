@@ -16,8 +16,8 @@ public abstract class AbstractLoadForecastModel extends AbstractOpenemsComponent
 
 	protected final Logger log = LoggerFactory.getLogger(AbstractLoadForecastModel.class);
 	
-	private final ChannelAddress channelAddress;
-	private final Clock clock;
+	//private final ChannelAddress channelAddress;
+	//private final Clock clock;
 	
 	protected Payload payload = null;
 
@@ -29,8 +29,8 @@ public abstract class AbstractLoadForecastModel extends AbstractOpenemsComponent
 				OpenemsComponent.ChannelId.values(), //
 				ForecastChannelId.values() //
 		);
-		this.channelAddress = new ChannelAddress(componentId, channelId.id());
-		this.clock = clock;
+//		this.channelAddress = new ChannelAddress(componentId, channelId.id());
+//		this.clock = clock; TODO: is this superclass necessary?
 	}
 	
 	protected AbstractLoadForecastModel(String componentId,

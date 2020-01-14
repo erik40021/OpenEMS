@@ -1,8 +1,8 @@
 package io.openems.edge.predictor.loadforecast;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
 import org.osgi.service.component.ComponentContext;
@@ -41,23 +41,32 @@ public class LoadForecast extends AbstractLoadForecastModel
 
 	@Reference
 	protected ComponentManager componentManager;
-	private String model_requested;					// set in config
-	private LocalDateTime current_date_time;		// set in config
+	
+	private String model_requested;									// set in config
+	private LocalDateTime simulated_current_date_time_on_start;		// set in config
+
+	private String database_id;
+
+	private LocalDateTime real_localdatetime_on_start;	
+	private LocalDateTime simulated_start_time;			//start time for forecast (in reality LocalDateTime.now())
+	
 	//private int selected_profile = -1;
 
 	public LoadForecast() {
 		super(OpenemsConstants.SUM_ID, Sum.ChannelId.CONSUMPTION_ACTIVE_ENERGY); // TODO: which channels?
+		this.real_localdatetime_on_start = LocalDateTime.now();
 	}
 
-	public LoadForecast(Clock clock) {
-		super(clock, OpenemsConstants.SUM_ID, Sum.ChannelId.CONSUMPTION_ACTIVE_ENERGY);
-	}
+//	public LoadForecast(Clock clock) {
+//		super(clock, OpenemsConstants.SUM_ID, Sum.ChannelId.CONSUMPTION_ACTIVE_ENERGY);
+//	}
 
 	@Activate
 	void activate(ComponentContext context, Config config) throws OpenemsNamedException {
 		super.activate(context, config.alias(), config.id(), config.enabled());
 		this.model_requested = config.model();
-		this.current_date_time = this.parseDateTime(config.time());
+		this.database_id = config.database_id();
+		this.simulated_current_date_time_on_start = this.parseDateTime(config.time());
 	}
 
 	@Deactivate
@@ -72,6 +81,8 @@ public class LoadForecast extends AbstractLoadForecastModel
 
 	@Override
 	public HourlyPrediction get24hPrediction() {
+		long hours_since_start = this.calculateHoursSinceStart();
+		this.simulated_start_time = this.simulated_current_date_time_on_start.plusHours(hours_since_start);
 		Integer[] forecast_load = null;
 		try {
 			forecast_load = this.getForecast();
@@ -79,11 +90,13 @@ public class LoadForecast extends AbstractLoadForecastModel
 			this.logError(this.log, e.toString());
 			return null;
 		}
-		LocalDateTime start = this.current_date_time;
-		HourlyPrediction forecast = new HourlyPrediction(forecast_load, start);
-		return forecast;
+		return new HourlyPrediction(forecast_load, this.simulated_start_time);
 	}
 	
+	public long calculateHoursSinceStart() {
+		return ChronoUnit.HOURS.between(this.real_localdatetime_on_start, LocalDateTime.now());
+	}
+
 	private LocalDateTime parseDateTime(String time) {
 		String cut_time = time.substring(0, 13);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH");
@@ -93,7 +106,7 @@ public class LoadForecast extends AbstractLoadForecastModel
 
 	public Integer[] getForecast() throws InterruptedException {
 		this.writeForecastRequest(this.model_requested);
-		Thread.sleep(5);
+		Thread.sleep(5);	//TODO correct?
 		if (this.payload != null) {
 			Payload payload = this.payload;
 			if (this.model_requested == payload.getModelName()) {
@@ -121,10 +134,10 @@ public class LoadForecast extends AbstractLoadForecastModel
 			throws OpenemsNamedException {
 		switch (request.getMethod()) {
 			case GetLoadForecastInputRequest.METHOD:
-				InputDataParser parser = new InputDataParser(this, this.model_requested, this.current_date_time);
+				InputDataParser parser = new InputDataParser(this, this.model_requested, this.simulated_start_time, 
+						this.componentManager.getComponent(this.database_id));
 				parser.parse();
-				return CompletableFuture.completedFuture(new GetLoadForecastInputResponse(request.getId(), 
-						parser.getInput()));
+				return CompletableFuture.completedFuture(new GetLoadForecastInputResponse(request.getId(), parser.getInput()));
 				
 			case LoadForecastOutputRequest.METHOD:
 				LoadForecastOutputRequest output_request = new LoadForecastOutputRequest(request.getParams());

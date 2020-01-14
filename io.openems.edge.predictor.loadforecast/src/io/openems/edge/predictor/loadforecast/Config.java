@@ -12,6 +12,9 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 	@AttributeDefinition(name = "Component-ID", description = "Unique ID of this Component")
 	String id() default "predictorLoadForecast0";
 	
+	@AttributeDefinition(name = "Database-ID", description = "Unique ID of the database that this predictor relies on")
+	String database_id() default "influx0";
+	
 	@AttributeDefinition(name = "Model", description = "Name of requested forecasting model")
 	String model() default "dnn";
 	
@@ -25,4 +28,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 	boolean enabled() default true;
 
 	String webconsole_configurationFactory_nameHint() default "Predictor Load Forecast [{id}]";
+
+	
 }
