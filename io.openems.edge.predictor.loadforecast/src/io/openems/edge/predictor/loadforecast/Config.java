@@ -1,6 +1,5 @@
 package io.openems.edge.predictor.loadforecast;
 
-
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
@@ -10,7 +9,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 @interface Config {
 
 	@AttributeDefinition(name = "Component-ID", description = "Unique ID of this Component")
-	String id() default "predictorLoadForecast0";
+	String id() default "forecast0";
 	
 	@AttributeDefinition(name = "Database-ID", description = "Unique ID of the database that this predictor relies on")
 	String database_id() default "influx0";

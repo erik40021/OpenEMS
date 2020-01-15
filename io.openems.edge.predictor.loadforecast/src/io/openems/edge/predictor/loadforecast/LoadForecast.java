@@ -11,7 +11,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import io.openems.common.OpenemsConstants;
+import org.osgi.service.metatype.annotations.Designate;
+
 import io.openems.common.exceptions.OpenemsError.OpenemsNamedException;
 import io.openems.common.jsonrpc.base.JsonrpcRequest;
 import io.openems.common.jsonrpc.base.JsonrpcResponseSuccess;
@@ -19,7 +20,6 @@ import io.openems.common.session.User;
 import io.openems.edge.common.component.ComponentManager;
 import io.openems.edge.common.component.OpenemsComponent;
 import io.openems.edge.common.jsonapi.JsonApi;
-import io.openems.edge.common.sum.Sum;
 import io.openems.edge.predictor.api.ConsumptionHourlyPredictor;
 import io.openems.edge.predictor.api.HourlyPrediction;
 import io.openems.edge.predictor.loadforecast.data.InputDataParser;
@@ -29,18 +29,16 @@ import io.openems.edge.predictor.loadforecast.jsonrpc.GetLoadForecastInputRespon
 import io.openems.edge.predictor.loadforecast.jsonrpc.LoadForecastOutputRequest;
 import io.openems.edge.predictor.loadforecast.jsonrpc.LoadForecastOutputResponse;
 
-import org.osgi.service.metatype.annotations.Designate;
-
 @Designate(ocd = Config.class, factory = true)
-@Component(name = "Predictor.Consumption.LoadForecast", //
-		immediate = true, //
-		configurationPolicy = ConfigurationPolicy.REQUIRE) //
-		//property = EventConstants.EVENT_TOPIC + "=" + EdgeEventConstants.TOPIC_CYCLE_AFTER_PROCESS_IMAGE)
+@Component(
+	name = "Predictor.LoadForecast", //
+	immediate = true, //
+	configurationPolicy = ConfigurationPolicy.REQUIRE) //
 public class LoadForecast extends AbstractLoadForecastModel
-		implements ConsumptionHourlyPredictor, JsonApi, OpenemsComponent{//, EventHandler {
+		implements /*ConsumptionHourlyPredictor, JsonApi, */OpenemsComponent {
 
-	@Reference
-	protected ComponentManager componentManager;
+//	@Reference
+//	protected ComponentManager componentManager;
 	
 	private String model_requested;									// set in config
 	private LocalDateTime simulated_current_date_time_on_start;		// set in config
@@ -53,45 +51,52 @@ public class LoadForecast extends AbstractLoadForecastModel
 	//private int selected_profile = -1;
 
 	public LoadForecast() {
-		super(OpenemsConstants.SUM_ID, Sum.ChannelId.CONSUMPTION_ACTIVE_ENERGY); // TODO: which channels?
+		super();
+		
 		this.real_localdatetime_on_start = LocalDateTime.now();
+		System.out.println(("constructor passed successfully [LoadForecast]"));
 	}
 
-//	public LoadForecast(Clock clock) {
-//		super(clock, OpenemsConstants.SUM_ID, Sum.ChannelId.CONSUMPTION_ACTIVE_ENERGY);
-//	}
-
 	@Activate
-	void activate(ComponentContext context, Config config) throws OpenemsNamedException {
+	void activate(ComponentContext context, Config config) {
 		super.activate(context, config.alias(), config.id(), config.enabled());
+		System.out.println(("activating component starting [LoadForecast]"));
 		this.model_requested = config.model();
 		this.database_id = config.database_id();
-		this.simulated_current_date_time_on_start = this.parseDateTime(config.time());
+		//this.simulated_current_date_time_on_start = this.parseDateTime(config.time());
+		
+		
+//		if (!OpenemsComponent.updateReferenceFilter(this.cm, this.servicePid(), "database", config.database_id())) {
+//			System.out.println("Updating reference filters failed or wasn't needed");
+//			//return; //TODO: throw OpenemsNamedException("");
+//		}
+		System.out.println(("Activation passed (successfully?) [LoadForecast]"));
 	}
 
 	@Deactivate
 	protected void deactivate() {
+		System.out.println("WHYYYYYYYYYYYYYYYYYYYYy");
 		super.deactivate();
 	}
 
 	@Override
 	protected ComponentManager getComponentManager() {
-		return this.componentManager;
+		return null;//this.componentManager;
 	}
 
-	@Override
-	public HourlyPrediction get24hPrediction() {
-		long hours_since_start = this.calculateHoursSinceStart();
-		this.simulated_start_time = this.simulated_current_date_time_on_start.plusHours(hours_since_start);
-		Integer[] forecast_load = null;
-		try {
-			forecast_load = this.getForecast();
-		} catch (InterruptedException e) {
-			this.logError(this.log, e.toString());
-			return null;
-		}
-		return new HourlyPrediction(forecast_load, this.simulated_start_time);
-	}
+//	@Override
+//	public HourlyPrediction get24hPrediction() {
+//		long hours_since_start = this.calculateHoursSinceStart();
+//		this.simulated_start_time = this.simulated_current_date_time_on_start.plusHours(hours_since_start);
+//		Integer[] forecast_load = null;
+//		try {
+//			forecast_load = this.getForecast();
+//		} catch (InterruptedException e) {
+//			this.logError(this.log, e.toString());
+//			return null;
+//		}
+//		return new HourlyPrediction(forecast_load, this.simulated_start_time);
+//	}
 	
 	public long calculateHoursSinceStart() {
 		return ChronoUnit.HOURS.between(this.real_localdatetime_on_start, LocalDateTime.now());
@@ -129,22 +134,22 @@ public class LoadForecast extends AbstractLoadForecastModel
 		notify();
 	}
 
-	@Override
-	public CompletableFuture<? extends JsonrpcResponseSuccess> handleJsonrpcRequest(User user, JsonrpcRequest request)
-			throws OpenemsNamedException {
-		switch (request.getMethod()) {
-			case GetLoadForecastInputRequest.METHOD:
-				InputDataParser parser = new InputDataParser(this, this.model_requested, this.simulated_start_time, 
-						this.componentManager.getComponent(this.database_id));
-				parser.parse();
-				return CompletableFuture.completedFuture(new GetLoadForecastInputResponse(request.getId(), parser.getInput()));
-				
-			case LoadForecastOutputRequest.METHOD:
-				LoadForecastOutputRequest output_request = new LoadForecastOutputRequest(request.getParams());
-				this.receiveLoadForecast(output_request.getForecast(), output_request.getModelName());
-				return CompletableFuture.completedFuture(new LoadForecastOutputResponse(request.getId()));
-		}
-		return null; 
-	}
+//	@Override
+//	public CompletableFuture<? extends JsonrpcResponseSuccess> handleJsonrpcRequest(User user, JsonrpcRequest request)
+//			throws OpenemsNamedException {
+//		switch (request.getMethod()) {
+//			case GetLoadForecastInputRequest.METHOD:
+//				InputDataParser parser = new InputDataParser(this, this.model_requested, this.simulated_start_time, 
+//						 null);//this.componentManager.getComponent(this.database_id));
+//				parser.parse();
+//				return CompletableFuture.completedFuture(new GetLoadForecastInputResponse(request.getId(), parser.getInput()));
+//				
+//			case LoadForecastOutputRequest.METHOD:
+//				LoadForecastOutputRequest output_request = new LoadForecastOutputRequest(request.getParams());
+//				this.receiveLoadForecast(output_request.getForecast(), output_request.getModelName());
+//				return CompletableFuture.completedFuture(new LoadForecastOutputResponse(request.getId()));
+//		}
+//		return null; 
+//	}
 	
 }

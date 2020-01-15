@@ -20,7 +20,9 @@ import io.openems.edge.predictor.api.ConsumptionHourlyPredictor;
 import io.openems.edge.predictor.api.HourlyPrediction;
 
 @Designate(ocd = Config.class, factory = true)
-@Component(name = "Controller.fid.PvProg", immediate = true, configurationPolicy = ConfigurationPolicy.REQUIRE)
+@Component(name = "Controller.fid.PvProg", 
+		immediate = true, 
+		configurationPolicy = ConfigurationPolicy.REQUIRE)
 public class PvProg extends AbstractOpenemsComponent implements Controller, OpenemsComponent {
 
 	private final Logger log = LoggerFactory.getLogger(PvProg.class);
