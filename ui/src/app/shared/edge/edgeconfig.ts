@@ -169,6 +169,17 @@ export class EdgeConfig {
     }
 
     /**
+     * Determines if Edge has a Meter device
+     */
+    public hasMeter(): boolean {
+        if (this.getComponentIdsImplementingNature('io.openems.edge.meter.api.SymmetricMeter').length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Determines if Edge has a producing device
      */
     public hasProducer(): boolean {
@@ -183,6 +194,7 @@ export class EdgeConfig {
                 if (component.properties['type'] == "PRODUCTION") {
                     return true;
                 }
+                // TODO remove, once all Edges are at least version 2019.15
                 switch (component.factoryId) {
                     case 'Fenecon.Mini.PvMeter':
                     case 'Fenecon.Dess.PvMeter':
@@ -207,6 +219,7 @@ export class EdgeConfig {
         if (component.properties['type'] == "PRODUCTION") {
             return true;
         } else {
+            // TODO remove, once all Edges are at least version 2019.15
             switch (component.factoryId) {
                 case 'Fenecon.Mini.PvMeter':
                 case 'Fenecon.Dess.PvMeter':
