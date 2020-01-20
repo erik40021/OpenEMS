@@ -18,7 +18,8 @@ Private-Package:  \
 	io.openems.common;version=latest,\
 	io.openems.edge.common;version=latest,\
 	io.openems.edge.controller.api;version=latest,\
-	io.openems.edge.predictor.api;version=latest
+	org.ops4j.pax.logging.pax-logging-api,\
+	io.openems.edge.predictor.api
 
 -testpath: ${testpath}
 

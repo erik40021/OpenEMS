@@ -1,4 +1,4 @@
-package io.openems.edge.controller.fid.pvprog;
+package io.openems.edge.controller.testy;
 
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -15,17 +15,14 @@ import io.openems.edge.common.channel.Doc;
 import io.openems.edge.common.component.AbstractOpenemsComponent;
 import io.openems.edge.common.component.ComponentManager;
 import io.openems.edge.common.component.OpenemsComponent;
-import io.openems.edge.controller.api.Controller;
-import io.openems.edge.predictor.api.ConsumptionHourlyPredictor;
-import io.openems.edge.predictor.api.HourlyPrediction;
 
 @Designate(ocd = Config.class, factory = true)
-@Component(name = "Controller.fid.PvProg", 
+@Component(name = "Controller.TESTy", 
 		immediate = true, 
 		configurationPolicy = ConfigurationPolicy.REQUIRE)
-public class PvProg extends AbstractOpenemsComponent implements Controller, OpenemsComponent {
+public class testy extends AbstractOpenemsComponent implements OpenemsComponent {
 
-	private final Logger log = LoggerFactory.getLogger(PvProg.class);
+	private final Logger log = LoggerFactory.getLogger(testy.class);
 
 	@Reference
 	protected ComponentManager componentManager;
@@ -47,8 +44,8 @@ public class PvProg extends AbstractOpenemsComponent implements Controller, Open
 		}
 	}
 
-	public PvProg() {
-		super(OpenemsComponent.ChannelId.values(), Controller.ChannelId.values(), ChannelId.values());
+	public testy() {
+		super(OpenemsComponent.ChannelId.values(), ChannelId.values());
 	}
 
 	@Activate
@@ -57,33 +54,13 @@ public class PvProg extends AbstractOpenemsComponent implements Controller, Open
 
 		this.battery_id = config.battery_Id();
 		this.load_forecast_id = config.load_forecast_Id();
+		System.out.println("TESTY activated");
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		super.deactivate();
 	}
-	
-	public void pv_prog(HourlyPrediction consumption, HourlyPrediction production) {
-		
-	}
 
-	@Override
-	public void run() throws OpenemsNamedException {
-		//BatteryInterfaceType** battery = this.componentManager.getComponent(this.battery_id);
-		ConsumptionHourlyPredictor forecaster = this.componentManager.getComponent(this.load_forecast_id);
-		System.out.println("found component ["+this.load_forecast_id+"]:");
-		System.out.println(forecaster);
-		HourlyPrediction forecast = forecaster.get24hPrediction();
-		if(forecast == null) {
-			System.out.println("No valid forecast responded");
-			return;
-		}
-		System.out.println("24h load forecast for start time " + forecast.getStart().toString() + " :");
-		for(int v: forecast.getValues()) {
-			System.out.println(v);
-		}
-		System.out.println("PvProg running");
-	}
 
 }

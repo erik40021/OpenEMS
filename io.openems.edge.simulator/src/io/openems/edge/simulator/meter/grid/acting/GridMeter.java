@@ -35,7 +35,7 @@ import io.openems.edge.simulator.datasource.api.SimulatorDatasource;
 @Designate(ocd = Config.class, factory = true)
 @Component(name = "Simulator.GridMeter.Acting", //
 		immediate = true, //
-		configurationPolicy = ConfigurationPolicy.REQUIRE, //
+		configurationPolicy = ConfigurationPolicy.IGNORE, //
 		property = { //
 				EventConstants.EVENT_TOPIC + "=" + EdgeEventConstants.TOPIC_CYCLE_BEFORE_PROCESS_IMAGE, //
 				"type=GRID" //

@@ -1,47 +1,37 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<repository xmlns="http://www.osgi.org/xmlns/repository/v1.0.0" name="io.openems.edge.bridge.mbus" increment="1572960460073">
+<repository xmlns="http://www.osgi.org/xmlns/repository/v1.0.0" name="io.openems.edge.bridge.mbus" increment="1579177556770">
   <resource>
     <capability namespace="osgi.identity">
       <attribute name="license" value="https://opensource.org/licenses/EPL-2.0"/>
       <attribute name="osgi.identity" value="io.openems.edge.bridge.mbus"/>
       <attribute name="type" value="osgi.bundle"/>
-      <attribute name="version" value="1.0.0.201911051327" type="Version"/>
+      <attribute name="version" value="1.0.0.202001161225" type="Version"/>
     </capability>
     <capability namespace="osgi.wiring.bundle">
-      <attribute name="bundle-version" value="1.0.0.201911051327" type="Version"/>
+      <attribute name="bundle-version" value="1.0.0.202001161225" type="Version"/>
       <attribute name="osgi.wiring.bundle" value="io.openems.edge.bridge.mbus"/>
     </capability>
     <capability namespace="osgi.wiring.host">
-      <attribute name="bundle-version" value="1.0.0.201911051327" type="Version"/>
+      <attribute name="bundle-version" value="1.0.0.202001161225" type="Version"/>
       <attribute name="osgi.wiring.host" value="io.openems.edge.bridge.mbus"/>
     </capability>
     <capability namespace="osgi.wiring.package">
-      <directive name="uses" value="io.openems.edge.bridge.mbus.api.task,io.openems.edge.common.channel,io.openems.edge.common.component,org.openmuc.jmbus,org.osgi.service.cm,org.osgi.service.component"/>
+      <directive name="uses" value="io.openems.edge.common.channel,io.openems.edge.common.component,org.openmuc.jmbus,org.osgi.service.cm,org.osgi.service.component"/>
       <attribute name="version" value="1.0.0" type="Version"/>
       <attribute name="osgi.wiring.package" value="io.openems.edge.bridge.mbus.api"/>
-      <attribute name="-provide" value="true"/>
-    </capability>
-    <capability namespace="osgi.wiring.package">
-      <directive name="uses" value="io.openems.edge.bridge.mbus.api,io.openems.edge.bridge.mbus.api.task,io.openems.edge.common.channel,io.openems.edge.common.component,org.openmuc.jmbus,org.osgi.service.component,org.osgi.service.event"/>
-      <attribute name="version" value="1.0.0" type="Version"/>
-      <attribute name="osgi.wiring.package" value="io.openems.edge.bridge.mbus"/>
-    </capability>
-    <capability namespace="osgi.wiring.package">
-      <directive name="uses" value="io.openems.edge.bridge.mbus.api,org.openmuc.jmbus"/>
-      <attribute name="version" value="1.0.0" type="Version"/>
-      <attribute name="osgi.wiring.package" value="io.openems.edge.bridge.mbus.api.task"/>
     </capability>
     <capability namespace="osgi.service">
+      <directive name="uses" value="io.openems.edge.bridge.mbus.api,io.openems.edge.common.component,org.osgi.service.event"/>
       <attribute name="objectClass" value="io.openems.edge.bridge.mbus.api.BridgeMbus,io.openems.edge.common.component.OpenemsComponent,org.osgi.service.event.EventHandler" type="List&lt;String&gt;"/>
     </capability>
     <capability namespace="osgi.content">
-      <attribute name="size" value="27073" type="Long"/>
+      <attribute name="size" value="23032" type="Long"/>
       <attribute name="url" value="generated/io.openems.edge.bridge.mbus.jar"/>
       <attribute name="mime" value="application/vnd.osgi.bundle"/>
-      <attribute name="osgi.content" value="CCCD45D6A3F2E9904E8B83A5ABB6D1BD6A16F9E46B580CFE5E5D1871F1841421"/>
+      <attribute name="osgi.content" value="D1504C902313460E76E01B81BCAB1C39328DD62A8C327945D4A88635743563D9"/>
     </capability>
     <capability namespace="bndtools.workspace">
-      <attribute name="bndtools.workspace" value="file:/home/de424/erik/openems-workspace2"/>
+      <attribute name="bndtools.workspace" value="file:/home/de424/git/openems"/>
       <attribute name="project.path" value="/io.openems.edge.bridge.mbus"/>
     </capability>
     <requirement namespace="osgi.wiring.package">
@@ -57,13 +47,7 @@
       <directive name="filter" value="(&amp;(osgi.wiring.package=io.openems.common.worker)(&amp;(version&gt;=1.0.0)(!(version&gt;=2.0.0))))"/>
     </requirement>
     <requirement namespace="osgi.wiring.package">
-      <directive name="filter" value="(&amp;(osgi.wiring.package=io.openems.edge.bridge.mbus)(&amp;(version&gt;=1.0.0)(!(version&gt;=2.0.0))))"/>
-    </requirement>
-    <requirement namespace="osgi.wiring.package">
-      <directive name="filter" value="(&amp;(osgi.wiring.package=io.openems.edge.bridge.mbus.api))"/>
-    </requirement>
-    <requirement namespace="osgi.wiring.package">
-      <directive name="filter" value="(&amp;(osgi.wiring.package=io.openems.edge.bridge.mbus.api.task)(&amp;(version&gt;=1.0.0)(!(version&gt;=2.0.0))))"/>
+      <directive name="filter" value="(&amp;(osgi.wiring.package=io.openems.edge.bridge.mbus.api)(&amp;(version&gt;=1.0.0)(!(version&gt;=2.0.0))))"/>
     </requirement>
     <requirement namespace="osgi.wiring.package">
       <directive name="filter" value="(&amp;(osgi.wiring.package=io.openems.edge.common.channel)(&amp;(version&gt;=1.0.0)(!(version&gt;=2.0.0))))"/>
@@ -81,19 +65,19 @@
       <directive name="filter" value="(&amp;(osgi.wiring.package=org.openmuc.jmbus.transportlayer)(&amp;(version&gt;=3.2.0)(!(version&gt;=4.0.0))))"/>
     </requirement>
     <requirement namespace="osgi.wiring.package">
-      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.cm)(&amp;(version&gt;=1.5.0)(!(version&gt;=2.0.0))))"/>
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.cm)(&amp;(version&gt;=1.6.0)(!(version&gt;=2.0.0))))"/>
     </requirement>
     <requirement namespace="osgi.wiring.package">
-      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.component)(&amp;(version&gt;=1.3.0)(!(version&gt;=2.0.0))))"/>
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.component)(&amp;(version&gt;=1.4.0)(!(version&gt;=2.0.0))))"/>
     </requirement>
     <requirement namespace="osgi.wiring.package">
-      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.event)(&amp;(version&gt;=1.3.0)(!(version&gt;=2.0.0))))"/>
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.event)(&amp;(version&gt;=1.4.0)(!(version&gt;=2.0.0))))"/>
     </requirement>
     <requirement namespace="osgi.wiring.package">
-      <directive name="filter" value="(&amp;(osgi.wiring.package=org.slf4j)(&amp;(version&gt;=1.7.0)(!(version&gt;=2.0.0))))"/>
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.slf4j)(&amp;(version&gt;=1.6.0)(!(version&gt;=2.0.0))))"/>
     </requirement>
     <requirement namespace="osgi.extender">
-      <directive name="filter" value="(&amp;(osgi.extender=osgi.component)(version&gt;=1.3.0)(!(version&gt;=2.0.0)))"/>
+      <directive name="filter" value="(&amp;(osgi.extender=osgi.component)(version&gt;=1.4.0)(!(version&gt;=2.0.0)))"/>
     </requirement>
     <requirement namespace="osgi.ee">
       <directive name="filter" value="(&amp;(osgi.ee=JavaSE)(version=1.8))"/>
