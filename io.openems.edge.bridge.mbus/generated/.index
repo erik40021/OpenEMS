@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<repository xmlns="http://www.osgi.org/xmlns/repository/v1.0.0" name="io.openems.edge.bridge.mbus" increment="1582811129281">
+<repository xmlns="http://www.osgi.org/xmlns/repository/v1.0.0" name="io.openems.edge.bridge.mbus" increment="1583846003633">
   <resource>
     <capability namespace="osgi.identity">
       <attribute name="license" value="https://opensource.org/licenses/EPL-2.0"/>
       <attribute name="osgi.identity" value="io.openems.edge.bridge.mbus"/>
       <attribute name="type" value="osgi.bundle"/>
-      <attribute name="version" value="1.0.0.202002271345" type="Version"/>
+      <attribute name="version" value="1.0.0.202003101313" type="Version"/>
     </capability>
     <capability namespace="osgi.wiring.bundle">
-      <attribute name="bundle-version" value="1.0.0.202002271345" type="Version"/>
+      <attribute name="bundle-version" value="1.0.0.202003101313" type="Version"/>
       <attribute name="osgi.wiring.bundle" value="io.openems.edge.bridge.mbus"/>
     </capability>
     <capability namespace="osgi.wiring.host">
-      <attribute name="bundle-version" value="1.0.0.202002271345" type="Version"/>
+      <attribute name="bundle-version" value="1.0.0.202003101313" type="Version"/>
       <attribute name="osgi.wiring.host" value="io.openems.edge.bridge.mbus"/>
     </capability>
     <capability namespace="osgi.wiring.package">
@@ -28,7 +28,7 @@
       <attribute name="size" value="23164" type="Long"/>
       <attribute name="url" value="generated/io.openems.edge.bridge.mbus.jar"/>
       <attribute name="mime" value="application/vnd.osgi.bundle"/>
-      <attribute name="osgi.content" value="5E31A0D6A4B60EA9D03732F297F407BA41D98BDAF2B1B6BD28F4AE8F6DBD454E"/>
+      <attribute name="osgi.content" value="0C00ED0BC855CB55B8C207BA86D828B3C7447338A5890649C0203E41EA984789"/>
     </capability>
     <capability namespace="bndtools.workspace">
       <attribute name="bndtools.workspace" value="file:/home/de424/git/openems"/>
