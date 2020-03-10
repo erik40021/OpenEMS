@@ -1,0 +1,26 @@
+Bundle-Name: OpenEMS Edge Predictor PV-Production
+Bundle-Vendor: OpenEMS Association Ev.
+Bundle-License: https://opensource.org/licenses/EPL-2.0
+Bundle-Version:	1.0.0.${tstamp}
+Bundle-Description: \
+	PV-Production Forecast
+
+Export-Package: \
+	
+Private-Package:  \
+	io.openems.edge.predictor.pvproduction
+
+-buildpath: \
+	${buildpath},\
+	io.openems.common;version=latest,\
+	io.openems.edge.common;version=latest,\
+	io.openems.edge.predictor.api;version=latest,\
+	io.openems.edge.timedata.api;version=latest,\
+	org.ops4j.pax.logging.pax-logging-api,\
+	com.google.gson
+	
+
+-testpath: ${testpath}
+
+javac.source: 1.8
+javac.target: 1.8

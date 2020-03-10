@@ -2,6 +2,7 @@ package io.openems.edge.predictor.load.jsonrpc;
 
 import java.util.UUID;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import io.openems.common.exceptions.OpenemsError.OpenemsNamedException;
@@ -26,8 +27,9 @@ public class LoadForecastOutputRequest extends JsonrpcRequest {
 	
 	private JsonObject params;
 	
-	private float[] forecast;
+	private Integer[] forecast;
 	private String model_name;
+	private int assigned_profile;
 
 	public LoadForecastOutputRequest(JsonObject params) throws OpenemsNamedException {
 		this(UUID.randomUUID(), params);
@@ -40,8 +42,20 @@ public class LoadForecastOutputRequest extends JsonrpcRequest {
 	
 	public void extractParams(JsonObject params) throws OpenemsNamedException {
 		this.params = params;
-		this.forecast = JsonUtils.getAsFloatArray(JsonUtils.getAsJsonArray(params, "load"));
+		JsonArray json_load = params.get("load").getAsJsonArray();
+		Integer[] loads =  new Integer[json_load.size()];
+		// Extract numbers from JSON array.
+		for (int i = 0; i < json_load.size(); i++) {
+		    loads[i] = json_load.get(i).getAsInt();
+		}
+		this.forecast = loads;
 		this.model_name = JsonUtils.getAsString(params, "model_name");
+		try {
+			this.assigned_profile = JsonUtils.getAsInt(params, "assigned_profile");
+		}
+		catch(OpenemsNamedException e) {
+			return;
+		}
 	}
 	
 	@Override
@@ -49,7 +63,11 @@ public class LoadForecastOutputRequest extends JsonrpcRequest {
 		return this.params;
 	}
 	
-	public float[] getForecast() {
+	public Integer getAssignedProfile() {
+		return this.assigned_profile;
+	}
+	
+	public Integer[] getForecast() {
 		return this.forecast;
 	}
 	

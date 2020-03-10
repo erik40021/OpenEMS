@@ -20,7 +20,7 @@ import io.openems.common.jsonrpc.base.JsonrpcRequest;
 */
 public class GetLoadForecastInputRequest extends JsonrpcRequest {
 
-	public static final String METHOD = "getLoadForecastInput";
+	public static final String METHOD = "GetLoadForecastInput";
 
 	public GetLoadForecastInputRequest() {
 		this(UUID.randomUUID());

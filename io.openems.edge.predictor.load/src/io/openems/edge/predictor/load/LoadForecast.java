@@ -2,7 +2,6 @@ package io.openems.edge.predictor.load;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
 import org.osgi.service.component.ComponentContext;
@@ -11,7 +10,6 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +21,10 @@ import io.openems.common.session.User;
 import io.openems.edge.common.component.AbstractOpenemsComponent;
 import io.openems.edge.common.component.ComponentManager;
 import io.openems.edge.common.component.OpenemsComponent;
-import io.openems.edge.common.event.EdgeEventConstants;
 import io.openems.edge.common.jsonapi.JsonApi;
 import io.openems.edge.predictor.api.ConsumptionHourlyPredictor;
 import io.openems.edge.predictor.api.HourlyPrediction;
 import io.openems.edge.predictor.load.data.InputDataParser;
-import io.openems.edge.predictor.load.data.Payload;
 import io.openems.edge.predictor.load.jsonrpc.GetLoadForecastInputRequest;
 import io.openems.edge.predictor.load.jsonrpc.GetLoadForecastInputResponse;
 import io.openems.edge.predictor.load.jsonrpc.LoadForecastOutputRequest;
@@ -46,109 +42,128 @@ public class LoadForecast extends AbstractOpenemsComponent //AbstractLoadForecas
 	@Reference
 	protected ComponentManager componentManager;
 	
-	private String model_requested;									// set in config
-	private LocalDateTime simulated_current_date_time_on_start;		// set in config
+	private String model_requested;
 
 	private String database_id;
-	private Payload payload;
+	private String fidvl_id;
+	private HourlyPrediction forecast;
 
-	private LocalDateTime real_localdatetime_on_start;	
 	private LocalDateTime simulated_start_time;			//start time for forecast (in reality LocalDateTime.now())
+	private float simulation_scaling_factor = 0.0f;
 
 	private final Logger log = LoggerFactory.getLogger(LoadForecast.class);
-	
-	//private int selected_profile = -1;
+
 	
 	public LoadForecast() {
 		super(OpenemsComponent.ChannelId.values(), //
 				ForecastChannelId.values());
-		
-		this.real_localdatetime_on_start = LocalDateTime.now();
-		System.out.println(("constructor passed successfully [LoadForecast]"));
 	}
 
 	@Activate
 	void activate(ComponentContext context, Config config) {
-		System.out.println(("activating component starting [LoadForecast]"));
 		super.activate(context, config.id(), config.alias(), config.enabled());
 		
 		this.model_requested = config.model();
 		this.database_id = config.database_id();
-		this.simulated_current_date_time_on_start = this.parseDateTime(config.time());
-		
-		
-//		if (!OpenemsComponent.updateReferenceFilter(this.cm, this.servicePid(), "database", config.database_id())) {
-//			System.out.println("Updating reference filters failed or wasn't needed");
-//			//return; //TODO: throw OpenemsNamedException("");
-//		}
-		System.out.println(("Activation passed (successfully?) [LoadForecast]"));
+		this.fidvl_id = config.fidvl_id();
+		this.forecast = null; //reset forecast in case model_requested changed in config
 	}
 	
 	@Deactivate
 	protected void deactivate() {
-		System.out.println("WHYYYYYY (2)");
 		super.deactivate();
 	}
 
-	
 	protected ComponentManager getComponentManager() {
 		return this.componentManager;
 	}
 
 	@Override
 	public HourlyPrediction get24hPrediction() {
-		long hours_since_start = this.calculateHoursSinceStart();
-		this.simulated_start_time = this.simulated_current_date_time_on_start.plusHours(hours_since_start);
-		Integer[] forecast_load = null;
 		try {
-			forecast_load = this.getForecast();
-		} catch (InterruptedException e) {
-			this.logError(this.log, e.toString());
+			this.updateSimulatedCurrentTime();
+		} catch (IllegalArgumentException | OpenemsNamedException e) {
+			e.printStackTrace();
 			return null;
 		}
-		if(forecast_load == null) return null;
-		return new HourlyPrediction(forecast_load, this.simulated_start_time);
-	}
-	
-	public long calculateHoursSinceStart() {
-		return ChronoUnit.HOURS.between(this.real_localdatetime_on_start, LocalDateTime.now());
-	}
-
-	private LocalDateTime parseDateTime(String time) {
-		String cut_time = time.substring(0, 13);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH");
-		return LocalDateTime.parse(cut_time, formatter);
-	}
-
-
-	public Integer[] getForecast() throws InterruptedException {
-		this.writeForecastRequest(this.model_requested);
-		Thread.sleep(5);	//TODO correct?
-		if (this.payload != null) {
-			Payload payload = this.payload;
-			if (this.model_requested == payload.getModelName()) {
-				return payload.getLoad();
-			}
+		if(this.forecast == null) {
+			this.log.info("Forecast not available yet. Requesting python forecaster to send forecast");
+			this.writeForecastRequest(this.model_requested);
+			return null;
 		}
-		return null;
+		else {
+			HourlyPrediction current_forecast = this.forecast;
+			this.forecast = null; //delete old (=used) forecast
+			return current_forecast;
+		}
+	}
+
+	private void updateSimulatedCurrentTime() throws IllegalArgumentException, OpenemsNamedException {
+		String time = this.componentManager.getComponent(this.fidvl_id).channel("SimulatedCurrentTime").getNextValue().get().toString();
+		String cut_time = time.substring(0,13);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH");
+		this.simulated_start_time = LocalDateTime.parse(cut_time, formatter);
 	}
 	
 	public void writeForecastRequest(String model_name) {
+		if(model_name.contentEquals("perfect")) {
+			this.getPerfect(); return;
+		}
 		this.channel(ForecastChannelId.FORECAST_MODEL_NAME).setNextValue(model_name);
 	}
 	
-	public void receiveLoadForecast(float[] load, String model_name) {
-		Integer[] l = new Integer[load.length];
-		for(int i=0; i<load.length; i++) {
-			l[i] = (int)load[i]*1000;		//assuming HourlyPrediction wants Wh and not kWh ..
+	private void getPerfect() {
+		InputDataParser parser; Integer[] f;
+		try {
+			parser = new InputDataParser(this, "perfect", this.simulated_start_time, 
+					 this.componentManager.getComponent(this.database_id));
+			f = parser.parsePerfect();
+		} catch (OpenemsNamedException e) {
+			e.printStackTrace();
+			System.err.println("Cannot get perfect forecast");
+			return;
 		}
-		this.payload = new Payload(model_name, l);
-		notify();
+		if(this.simulation_scaling_factor == 0.0f) {
+			try {
+				this.simulation_scaling_factor = (float) this.componentManager.getComponent(this.fidvl_id).channel("SimulationScalingFactorLoad").getNextValue().get();
+			} catch (IllegalArgumentException | OpenemsNamedException e) {
+				e.printStackTrace();
+				System.err.println("Cannot apply scaling factor for simulation");
+				return;
+			}
+		}
+		this.forecast = new HourlyPrediction(scale(f, this.simulation_scaling_factor), this.simulated_start_time);
+	}
+
+	public void receiveLoadForecast(Integer[] load, String model_name, LocalDateTime time_of_request, Integer assigned_profile) {
+		if(this.simulation_scaling_factor == 0.0f) {
+			try {
+				this.simulation_scaling_factor = (float) this.componentManager.getComponent(this.fidvl_id).channel("SimulationScalingFactorLoad").getNextValue().get();
+			} catch (IllegalArgumentException | OpenemsNamedException e) {
+				e.printStackTrace();
+				System.err.println("Cannot apply scaling factor for simulation");
+				return;
+			}
+		}
+		this.forecast = new HourlyPrediction(scale(load, this.simulation_scaling_factor), time_of_request);
+		//take back request to receive forecast
+		this.channel(ForecastChannelId.FORECAST_MODEL_NAME).setNextValue(null);
+		if(assigned_profile != null)
+			this.channel(ForecastChannelId.ASSIGNED_PROFILE).setNextValue(assigned_profile);
+	}
+	
+	private static Integer[] scale(Integer[] a, float factor) {
+		Integer[] b = new Integer[a.length];
+		for(int i=0; i<b.length; i++) {
+			b[i] = (int) (a[i] * factor);
+		}
+		return b;
 	}
 
 	@Override
 	public CompletableFuture<? extends JsonrpcResponseSuccess> handleJsonrpcRequest(User user, JsonrpcRequest request)
 			throws OpenemsNamedException {
+		System.out.println("\n[LoadForecast] Received Request "+request.getMethod()+"\n");
 		switch (request.getMethod()) {
 			case GetLoadForecastInputRequest.METHOD:
 				InputDataParser parser = new InputDataParser(this, this.model_requested, this.simulated_start_time, 
@@ -157,8 +172,10 @@ public class LoadForecast extends AbstractOpenemsComponent //AbstractLoadForecas
 				return CompletableFuture.completedFuture(new GetLoadForecastInputResponse(request.getId(), parser.getInput()));
 				
 			case LoadForecastOutputRequest.METHOD:
+				System.out.println("\n[LoadForecast] Output of Request: "+request.getParams().toString()+"\n");
 				LoadForecastOutputRequest output_request = new LoadForecastOutputRequest(request.getParams());
-				this.receiveLoadForecast(output_request.getForecast(), output_request.getModelName());
+				this.receiveLoadForecast(output_request.getForecast(), output_request.getModelName(), this.simulated_start_time,
+						output_request.getAssignedProfile());
 				return CompletableFuture.completedFuture(new LoadForecastOutputResponse(request.getId()));
 		}
 		return null; 
@@ -166,7 +183,8 @@ public class LoadForecast extends AbstractOpenemsComponent //AbstractLoadForecas
 	
 	@Override
 	public String debugLog() {
-		return this.channel(ForecastChannelId.FORECAST_MODEL_NAME).value().asString();
+		return  "Forecast-model-name: "+this.channel(ForecastChannelId.FORECAST_MODEL_NAME).value().asString()+
+				", assigned profile: "+this.channel(ForecastChannelId.ASSIGNED_PROFILE).getNextValue().asString();
 	}
 
 }

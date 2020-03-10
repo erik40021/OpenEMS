@@ -22,6 +22,10 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 	@AttributeDefinition(name = "Baudrate", description = "Serial Device Speed")
 	int baudrate() default 2400;
+	
+	@AttributeDefinition(name = "multi_telegram", description = "Toggles multi-telegram")
+	boolean multi_telegram() default false;
+	
 
 	String webconsole_configurationFactory_nameHint() default "Bridge M-Bus [{id}]";
 }

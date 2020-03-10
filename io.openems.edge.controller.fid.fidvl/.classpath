@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="aQute.bnd.classpath.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" output="bin" path="src"/>
+	<classpathentry kind="src" output="bin_test" path="test">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="/io.openems.edge.ess.api"/>
+	<classpathentry kind="src" path="/io.openems.edge.timedata.api"/>
+	<classpathentry kind="lib" path="/home/de424/.m2/repository/com/google/code/gson/gson/2.8.5/gson-2.8.5.jar" sourcepath="/home/de424/.m2/repository/com/google/code/gson/gson/2.8.5/gson-2.8.5-sources.jar">
+		<attributes>
+			<attribute name="bsn" value="com.google.gson"/>
+			<attribute name="type" value="REPO"/>
+			<attribute name="project" value="io.openems.backend.b2brest"/>
+			<attribute name="version" value="2.8"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="accessible" pattern="com/google/gson/*"/>
+			<accessrule kind="accessible" pattern="com/google/gson/annotations/*"/>
+			<accessrule kind="accessible" pattern="com/google/gson/reflect/*"/>
+			<accessrule kind="accessible" pattern="com/google/gson/stream/*"/>
+			<accessrule ignoreifbetter="true" kind="discouraged" pattern="**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="src" path="/io.openems.edge.pvinverter.api"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

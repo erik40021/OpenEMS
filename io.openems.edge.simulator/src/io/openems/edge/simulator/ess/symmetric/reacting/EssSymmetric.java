@@ -148,7 +148,7 @@ public class EssSymmetric extends AbstractOpenemsComponent
 		 * calculate State of charge
 		 */
 		float watthours = (float) activePower * this.datasource.getTimeDelta() / 3600;
-		float socChange = watthours / this.capacity;
+		float socChange = watthours / this.capacity * 100;
 		this.soc -= socChange;
 		if (this.soc > 100) {
 			this.soc = 100;
@@ -179,12 +179,16 @@ public class EssSymmetric extends AbstractOpenemsComponent
 		if (this.soc == 100) {
 			this.getAllowedCharge().setNextValue(0);
 		} else {
-			this.getAllowedCharge().setNextValue(this.maxApparentPower * -1);
+			this.getAllowedCharge().setNextValue(Math.min((this.capacity - (int) (this.soc/100 * this.capacity)), this.maxApparentPower) * -1);
+			if(this.getAllowedCharge().getNextValue().get() == 0) {
+				this.soc = 100; //for consistency, which is not always granted with float SoC close to 100
+			}
 		}
 		if (this.soc == 0) {
 			this.getAllowedDischarge().setNextValue(0);
 		} else {
-			this.getAllowedDischarge().setNextValue(this.maxApparentPower);
+			this.getAllowedDischarge().setNextValue(Math.min((int) (this.soc/100 * this.capacity), this.maxApparentPower));
+			if(this.getAllowedDischarge().getNextValue().get() == 0) this.soc = 0;
 		}
 	}
 
